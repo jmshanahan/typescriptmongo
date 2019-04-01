@@ -1,0 +1,19 @@
+{
+  "name": "tut1controllers",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "ts-node ./src/server.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@types/body-parser": "^1.17.0",
+    "@types/express": "^4.16.1",
+    "express": "^4.16.4",
+    "ts-node": "^8.0.3",
+    "typescript": "^3.3.3333"
+  }
+}
