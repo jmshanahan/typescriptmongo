@@ -1,9 +1,12 @@
 import express from 'express';
+import validationMiddleware from '../middleware/validation.middleware';
+import CreatePostDto from './post.dto';
 import Post from './post.interface';
 import Controller from '../interfaces/controller.interface';
 import postModel from './posts.model';
 import HttpException from '../exceptions/HttpException';
 import PostNotFoundException from '../exceptions/PostNotFoundException';
+import mongoose from 'mongoose';
 class PostController implements Controller {
   public path = '/posts';
   public router = express.Router();
@@ -17,7 +20,11 @@ class PostController implements Controller {
     this.router.get(`${this.path}/:id`, this.getPostById);
     this.router.put(`${this.path}/:id`, this.modifyPost);
     this.router.delete(`${this.path}/:id`, this.deletePost);
-    this.router.post(this.path, this.createPost);
+    this.router.post(
+      this.path,
+      validationMiddleware(CreatePostDto),
+      this.createPost
+    );
   }
   private getAllPosts = (
     request: express.Request,
@@ -33,13 +40,20 @@ class PostController implements Controller {
     next: express.NextFunction
   ) => {
     const id = request.params.id;
-    this.post.findById(id).then(post => {
-      if (post) {
-        response.send(post);
-      } else {
-        next(new PostNotFoundException(id));
-      }
-    });
+    if (mongoose.Types.ObjectId.isValid(id)) {
+      this.post
+        .findById(id)
+        .then(post => {
+          if (post) {
+            response.send(post);
+          } else {
+            next(new PostNotFoundException(id));
+          }
+        })
+        .catch(err => new HttpException(404, 'No post found'));
+    } else {
+      next(new HttpException(404, `${id} is not a valid mongodb ID`));
+    }
   };
   private modifyPost = (
     request: express.Request,

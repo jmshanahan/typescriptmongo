@@ -21,7 +21,7 @@ class App {
   private initializeErrorHandling() {
     this.app.use(errorMiddleware);
   }
-  private initializeControllers(controllers: any) {
+  private initializeControllers(controllers: Controller[]) {
     controllers.forEach(controller => {
       this.app.use('/', controller.router);
     });
@@ -33,7 +33,9 @@ class App {
   }
   private connectToTheDatabase() {
     const { MONGO_USER, MONGO_PASSWORD, MONGO_PATH } = process.env;
-    mongoose.connect(`mongodb://${MONGO_USER}:${MONGO_PASSWORD}${MONGO_PATH}`);
+    mongoose.connect(`mongodb://${MONGO_USER}:${MONGO_PASSWORD}${MONGO_PATH}`, {
+      useNewUrlParser: true
+    });
   }
 }
 export default App;

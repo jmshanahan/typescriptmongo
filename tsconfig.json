@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "experimentalDecorators": true,
     "target": "ES2017",
     "sourceMap": true,
     "outDir": "./dist" /* Redirect output structure to the directory. */,
