@@ -1,16 +1,14 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import mongoose from 'mongoose';
-import * as cookieParser from 'cookie-parser';
+import cookieParser from 'cookie-parser';
 import Controller from './interfaces/controller.interface';
 import errorMiddleware from './middleware/error.middleware';
 
 class App {
   public app: express.Application;
-  public port: number;
-  constructor(controllers: Controller[], port: number) {
+  constructor(controllers: Controller[]) {
     this.app = express();
-    this.port = port;
     this.connectToTheDatabase();
     this.initializeMiddlewares();
     this.initializeControllers(controllers);
@@ -29,8 +27,10 @@ class App {
     });
   }
   public listen() {
-    this.app.listen(this.port, () => {
-      console.log(`App listening on the port ${this.port}`);
+    const port: number = Number(process.env.PORT);
+
+    this.app.listen(port, () => {
+      console.log(`App listening on the port ${port}`);
     });
   }
   private connectToTheDatabase() {

@@ -81,19 +81,19 @@ class AuthenticationController implements Controller {
     }
   };
 
-  // private loggingOut = (
-  //   request: express.Request,
-  //   response: express.Response
-  // ) => {
-  //   response.setHeader('Set-Cookie', ['Authorization=;Max-age=0']);
-  //   response.send(200);
-  // };
+  private loggingOut = (
+    request: express.Request,
+    response: express.Response
+  ) => {
+    response.setHeader('Set-Cookie', ['Authorization=;Max-age=0']);
+    response.send(200);
+  };
 
-  // private createCookie(tokenData: TokenData) {
-  //   return `Authorization=${tokenData.token}; HttpOnly; Max-Age=${
-  //     tokenData.expiresIn
-  //   }`;
-  // }
+  private createCookie(tokenData: TokenData) {
+    return `Authorization=${tokenData.token}; HttpOnly; Max-Age=${
+      tokenData.expiresIn
+    }`;
+  }
 
   private createToken(user: User): TokenData {
     const expiresIn = 60 * 60; // an hour
@@ -105,7 +105,7 @@ class AuthenticationController implements Controller {
       expiresIn,
       token: jwt.sign(dataStoredInToken, secret, { expiresIn })
     };
-  // }
+  }
 }
 
 export default AuthenticationController;

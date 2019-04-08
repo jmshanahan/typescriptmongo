@@ -31,6 +31,7 @@ async function authMiddleware(
       next(new WrongAuthenticationTokenException());
     }
   } else {
-    next(new AuthenticationTokenMussingException());
+    next(new AuthenticationTokenMissingException());
   }
 }
+export default authMiddleware;
