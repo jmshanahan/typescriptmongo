@@ -35,14 +35,14 @@ class PostController implements Controller {
         this.createPost
       );
   }
-  private getAllPosts = (
+  private getAllPosts = async (
     request: express.Request,
     response: express.Response
   ) => {
-    this.post.find().then(posts => {
-      response.send(posts);
-    });
+    const posts = await this.post.find().populate('author', '-password');
+    response.send(posts);
   };
+
   private getPostById = (
     request: express.Request,
     response: express.Response,
@@ -86,9 +86,10 @@ class PostController implements Controller {
     const postData: Post = request.body;
     const createPost = new this.post({
       ...postData,
-      authorId: request.user._id
+      author: request.user._id
     });
     const savedPost = await createPost.save();
+    await savedPost.populate('author', '-password').execPopulate();
     response.send(savedPost);
   };
   private deletePost = (

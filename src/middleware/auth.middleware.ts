@@ -20,6 +20,7 @@ async function authMiddleware(
         secret
       ) as DataStoredInToken;
       const id = verificationResponse._id;
+      console.log(`User id of verification is ${id}`);
       const user = await userModel.findById(id);
       if (user) {
         request.user = user;

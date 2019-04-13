@@ -85,18 +85,28 @@ class AuthenticationController implements Controller {
     request: express.Request,
     response: express.Response
   ) => {
-    response.setHeader('Set-Cookie', ['Authorization=;Max-age=0']);
+    const cookie = request.cookies;
+    for (var prop in cookie) {
+      console.log(`The prop is ${prop}`);
+      if (!cookie.hasOwnProperty(prop)) {
+        continue;
+      }
+      // response.cookie(prop, '', { expires: new Date(0) });
+      response.setHeader('Set-Cookie', [`${prop}=;Max-age=0`]);
+    }
+    // response.redirect('/');
+    // response.setHeader('Set-Cookie', ['Authorization=;Max-age=0']);
     response.sendStatus(200);
   };
 
   private createCookie(tokenData: TokenData) {
     return `Authorization=${tokenData.token}; HttpOnly; Max-Age=${
       tokenData.expiresIn
-    }`;
+    };`;
   }
 
   private createToken(user: User): TokenData {
-    const expiresIn = 60 * 60; // an hour
+    const expiresIn = 60 * 60 * 2; // an hour
     const secret = process.env.JWT_SECRET;
     const dataStoredInToken: DataStoredInToken = {
       _id: user._id
